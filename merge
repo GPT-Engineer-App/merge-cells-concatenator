@@ -1,0 +1,33 @@
+import com.aspose.words.*;
+
+public class MergeCellsExample {
+
+    public static void main(String[] args) throws Exception {
+        // Load the source and target documents
+        Document sourceDoc = new Document("source.docx");
+        Document targetDoc = new Document("target.docx");
+
+        // Get the specific cells you want to merge
+        Cell sourceCell = getCellByIndex(sourceDoc, 0, 0, 0); // Adjust indices as needed
+        Cell targetCell = getCellByIndex(targetDoc, 0, 0, 0); // Adjust indices as needed
+
+        // Merge the cells
+        mergeCells(targetCell, sourceCell);
+
+        // Save the modified target document
+        targetDoc.save("merged.docx");
+    }
+
+    public static void mergeCells(Cell targetCell, Cell sourceCell) throws Exception {
+        for (Node child : sourceCell.getChildNodes()) {
+            // Clone the child node and append it to the target cell
+            targetCell.appendChild(child.deepClone(true));
+        }
+    }
+
+    public static Cell getCellByIndex(Document doc, int tableIndex, int rowIndex, int cellIndex) {
+        Table table = (Table) doc.getChild(NodeType.TABLE, tableIndex, true);
+        Row row = table.getRows().get(rowIndex);
+        return row.getCells().get(cellIndex);
+    }
+}
